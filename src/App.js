@@ -15,6 +15,7 @@ function App() {
 
   useEffect(() => {
     getRecipe();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   const getRecipe = async () => {
@@ -46,9 +47,9 @@ function App() {
         <button className="search-button" type="submit" >Search</button>
       </form>
       <div className="recipes">
-        {recipes.map(recipe => (
+        {recipes.map((recipe, index) => (
           <Recipe
-            key={recipe.recipe.label}
+            key={index}
             title={recipe.recipe.label}
             image={recipe.recipe.image}
             calories={recipe.recipe.calories}
