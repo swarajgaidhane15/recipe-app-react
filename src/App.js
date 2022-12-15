@@ -39,8 +39,9 @@ function App() {
           type="text"
           value={search}
           onChange={handleChange}
+          data-testid="search-input"
         />
-        <button className="search-button" type="submit" >Search</button>
+        <button className="search-button" type="submit" data-testid="search-button">Search</button>
       </form>
       <div className="recipes">
         {recipes.map((recipe, index) => (
