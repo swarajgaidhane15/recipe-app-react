@@ -1,0 +1,79 @@
+DockerFile
+------------------------------------------------
+FROM node:12-slim
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+
+COPY . .
+
+USER node
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+
+
+
+docker-compose.yml
+------------------------------------------------
+version: '3'
+services:
+  react:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    env_file: ./.env
+    container_name: react
+    volumes:
+      - ./usr/src/app
+    networks:
+      my-network:
+          aliases:
+              - react-app
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    stdin_open: true
+  mongo:
+    image: mongo:3.6-xenial
+    environment:
+      - MONGO_URI=value
+    ports:
+      - "27017:27017"
+    networks:
+      - recipe-react-app
+    volumes:
+      -mongo-data:/data/db
+
+networks:
+  recipe-react-app:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
+
+
+
+MakeFile
+------------------------------------------------
+
+PROJECT_ID=recipe-react-app
+
+run-local:
+	docker-compose up
+
+
+create-tf-backend-bucket:
+gsutil mb -p $(PROJECT_ID) gs://$(PROJECT_ID)-terraform
+# 			 ^  ^													^
+# 			 |  |													|
+#  			 |	project_id_flag          bucket_name
+#      makebucket_command
