@@ -1,0 +1,15 @@
+version: '3.0'
+
+services:
+  app:
+    container_name: recipe-app-react-container
+    image: recipe-app-react-image
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    env_file: ./.env
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    stdin_open: true
